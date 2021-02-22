@@ -37,7 +37,7 @@
                 sortable: true,
                 filterable: true,
                 selectable: "row",
-                change: function(){
+                change: function(){ //點選某一筆資料後的回應
                     var grid = this ;
                     var selected = $.map(this.select(), function(item) {
                         return grid.dataItem($(item));
