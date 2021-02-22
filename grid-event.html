@@ -12,9 +12,9 @@
         $(function(){
             //範例資料
             var products = [
-                {ProductName:"Compute", UnitPrice:300, UnitsInStock:3, Discontinued:false},
-                {ProductName:"Phone", UnitPrice:120, UnitsInStock:1, Discontinued:false},
-                {ProductName:"Mobile", UnitPrice:180, UnitsInStock:2, Discontinued:false}
+                {Selected:true, ProductName:"Compute", UnitPrice:300, UnitsInStock:3, Discontinued:false},
+                {Selected:false, ProductName:"Phone", UnitPrice:120, UnitsInStock:1, Discontinued:false},
+                {Selected:true, ProductName:"Mobile", UnitPrice:180, UnitsInStock:2, Discontinued:false}
             ];
 
             //初始化資料表
@@ -36,15 +36,30 @@
                 scrollable: true,
                 sortable: true,
                 filterable: true,
-                selectable: "row",
-                change: function(){ //點選某一筆資料後的回應
+                selectable: "multiple, row",
+                //點選某一筆資料後的回應
+                change: function(){
                     var grid = this ;
                     var selected = $.map(this.select(), function(item) {
                         return grid.dataItem($(item));
                     });
                     console.log(selected[0].UnitPrice);
                 },
+                //
+                dataBound: function (e) {
+                    var grid = e.sender;
+                    var items = grid.items();
+                    var itemsToSelect = [];
+                    items.each(function (idx, row) {
+                        var dataItem = grid.dataItem(row);
+                        if (dataItem.Selected == true) {
+                            itemsToSelect.push(row);
+                        }
+                    });
+                    e.sender.select(itemsToSelect);
+                },
                 columns: [
+                    { selectable: true, width: "50px" },
                     "ProductName",
                     { field: "UnitPrice", title: "Unit Price", format: "{0:c}", width: "130px" },
                     { field: "UnitsInStock", title: "Units In Stock", width: "130px" },
